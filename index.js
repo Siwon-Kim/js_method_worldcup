@@ -30,8 +30,8 @@ app.get("/result", (req, res) => {
 });
 
 app.get("/funcs", async (req, res) => {
-	const funcsDoc = await Func.find({});
-	res.json(funcsDoc);
+  const funcsDoc = await Func.find({});
+  res.json(funcsDoc);
 });
 
 app.patch("/func/score/:id", async (req, res) => {
