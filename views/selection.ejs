@@ -50,8 +50,8 @@
 					다음
 				</button>
 			</div>
-			<div class="ranking_dtn">
-				<button class="button is-link is-light">홈으로 돌아가기</button>
+			<div class="ranking_btn">
+				<button class="button is-link is-light" onclick="nextQuestion()">홈으로 돌아가기</button>
 			</div>
 		</div>
 	</body>
@@ -146,16 +146,20 @@
 				// await this.waitForClick();
 				let selected_method = this.value;
 				console.log(selected_method);
-				// push to winner[]
-				// 
+				// check if class has "clicked"
+				// if so, pull from winner[]
+				// if not, push to winner[]
 			});
 
 			let selectOne = async () => {
 				await button.waitForClick();
 			};
 
-			// then empty display
-			display = [];
+			let nextQuestion = async () => {
+				// empty display
+				display = [];
+			}
+			
 		}
 	};
 </script>
