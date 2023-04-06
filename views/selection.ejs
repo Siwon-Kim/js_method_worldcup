@@ -106,7 +106,7 @@
 			let display_html = `<div class="box">
 									<article class="media">
 										<div class="media-content">
-											<div class="selection-box first" value=${display[0]}>
+											<div class="selection-box first" data-value=${JSON.stringify(display[0])}>
 												<p>
 													<strong style="font-size: 33px; margin-right: 7px;">${display[0].name}</strong>
 													<br />
@@ -142,10 +142,10 @@
 			};
 
 			// click function
-			$(".selection-box").on("click", async () => {
-				// await this.waitForClick();
-				let selected_method = this.value;
-				console.log(selected_method);
+			$(".selection-box").on("click", function () {
+				let selected_method = $(this).data('value');
+				let method_id = selected_method.substring(6, 8)
+				console.log(method_id);
 				// check if class has "clicked"
 				// if so, pull from winner[]
 				// if not, push to winner[]
