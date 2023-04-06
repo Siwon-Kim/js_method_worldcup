@@ -12,7 +12,19 @@ mongoose.connect(
 );
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("home");
+});
+
+app.get("/selection", (req, res) => {
+  res.render("selection");
+});
+
+app.get("/ranking", (req, res) => {
+  res.render("ranking");
+});
+
+app.get("/result", (req, res) => {
+  res.render("result");
 });
 
 app.listen(port, () => console.log(`running on http://localhost:${port}`));
