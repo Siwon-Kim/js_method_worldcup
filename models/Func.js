@@ -5,7 +5,7 @@ const Func = new Schema({
   id: Number,
   name: String,
   content: String,
-  score: String,
+  score: Number,
 });
 
 const FuncModel = model("Func", Func);
