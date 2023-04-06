@@ -5,10 +5,20 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>JS Method 월드컵</title>
+		<!-- bulma for css -->
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
 		/>
+		<!-- fontawesome for icons -->
+		<script
+			src="https://kit.fontawesome.com/67e7bd3082.js"
+			crossorigin="anonymous"
+		></script>
+		<!-- axios -->
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<!-- jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<style>
 			@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
 			* {
@@ -17,7 +27,7 @@
 			button {
 				font-family: "Gowun Dodum", sans-serif;
 				margin: 15px;
-                width: 210px;
+				width: 210px;
 			}
 			html {
 				background-color: #ffe882;
@@ -29,8 +39,119 @@
 				justify-content: center;
 				margin: 50px;
 			}
+            .rank-box {
+                margin: 15px;
+            }
+            .box {
+                width: 800px;
+            }
 		</style>
-		<!-- <link rel="stylesheet" href="default.css"> -->
+
+		<script>
+			$(document).ready(() => {
+				getRanking();
+			});
+			let first_place, second_place, third_place;
+			let loadJson = async () => {
+				let methods = [];
+				return axios
+					.get("/funcs")
+					.then((res) => {
+						res.data.forEach((e) => {
+							let id = e.id;
+							let name = e.name;
+							let score = e.score;
+							let content = e.content;
+							let method = {
+								id: e.id,
+								name: e.name,
+								score: e.score,
+								content: e.content,
+							};
+							methods.push(method);
+						});
+						return methods;
+					})
+					.catch((err) => {
+						throw err;
+					});
+			};
+
+			let getRanking = async () => {
+				let methods = await loadJson();
+				methods.sort((a, b) => {
+					let score_a = a.score;
+					let score_b = b.score;
+					return score_a < score_b ? 1 : -1;
+				});
+				first_place = methods[0];
+				second_place = methods[1];
+				third_place = methods[2];
+
+				console.log(first_place, second_place, third_place);
+				let rank_html = `<div class="box">
+                                    <article class="media">
+                                        <div class="media-left">
+                                            <img
+                                                src="https://cdn-icons-png.flaticon.com/512/5406/5406792.png"
+                                                style="width: 120px"
+                                            />
+                                        </div>
+                                        <div class="media-content">
+                                            <div class="rank-box first">
+                                                <p>
+                                                    <strong style="font-size: 33px; margin-right: 7px;">${first_place.name}</strong>
+                                                    <small style="font-size: 20px;">1등</small>
+                                                    <br />
+                                                    ${first_place.content}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="box">
+                                    <article class="media">
+                                        <div class="media-left">
+                                            <img
+                                                src="https://cdn-icons-png.flaticon.com/512/5406/5406797.png"
+                                                style="width: 120px"
+                                            />
+                                        </div>
+                                        <div class="media-content">
+                                            <div class="rank-box second">
+                                                <p>
+                                                    <strong style="font-size: 25px; margin-right: 7px;">${second_place.name}</strong>
+                                                    <medium >2등</medium> 
+                                                    <br />
+                                                    ${second_place.content}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="box">
+                                    <article class="media">
+                                        <div class="media-left">
+                                            <img
+                                                src="https://cdn-icons-png.flaticon.com/512/5406/5406799.png"
+                                                style="width: 120px"
+                                            />
+                                        </div>
+                                        <div class="media-content">
+                                            <div class="rank-box third">
+                                                <p>
+                                                    <strong style="font-size: 25px; margin-right: 7px;">${third_place.name}</strong>
+                                                    <medium>3등</medium>
+                                                    <br />
+                                                    ${third_place.content}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>`;
+				$(".boxes").append(rank_html);
+			};
+		</script>
 	</head>
 
 	<body>
@@ -39,77 +160,14 @@
 				<h3>&#128681;JavaScript 메서드 월드컵&#128681;</h3>
 			</div>
 			<div class="subtitle">
-				<h5>당신의 최애 자바스크립트 메서드 결과는?</h5>
+				<h5>당신의 최애 자바스크립트 메서드는?!</h5>
 			</div>
-			<div class="boxes">
-				<div class="box">
-					<article class="media">
-						<div class="media-left">
-							<img
-								src="https://cdn-icons-png.flaticon.com/512/5406/5406792.png"
-								style="width: 120px"
-							/>
-						</div>
-						<div class="media-content">
-							<div class="content">
-								<p>
-									<strong>console.log()</strong>
-									<small>1등</small>
-									<br />
-									console.log()는 뭐뭐뭔데 뭠뭐고 디버깅 굳
-								</p>
-							</div>
-						</div>
-					</article>
-				</div>
-				<div class="box">
-					<article class="media">
-						<div class="media-left">
-							<img
-								src="https://cdn-icons-png.flaticon.com/512/5406/5406797.png"
-								style="width: 120px"
-							/>
-						</div>
-						<div class="media-content">
-							<div class="content">
-								<p>
-									<strong>console.log()</strong>
-									<small>2등</small>
-									<br />
-									console.log()는 뭐뭐뭔데 뭠뭐고 디버깅 굳
-								</p>
-							</div>
-						</div>
-					</article>
-				</div>
-				<div class="box">
-					<article class="media">
-						<div class="media-left">
-							<img
-								src="https://cdn-icons-png.flaticon.com/512/5406/5406799.png"
-								style="width: 120px"
-							/>
-						</div>
-						<div class="media-content">
-							<div class="content">
-								<p>
-									<strong>console.log()</strong>
-									<small>3등</small>
-									<br />
-									console.log()는 뭐뭐뭔데 뭠뭐고 디버깅 굳
-								</p>
-							</div>
-						</div>
-					</article>
-				</div>
-			</div>
-			<div class="ranking_dtn">
-				<button class="button is-link is-light is-large">
+			<div class="boxes"></div>
+			<div class="home_btn">
+				<button class="button is-primary is-light is-large">
 					랭킹 보러가기
 				</button>
-			</div>
-			<div class="start_btn">
-				<button class="button is-primary is-light is-large">
+				<button class="button is-link is-light is-large">
 					홈으로 돌아가기
 				</button>
 			</div>

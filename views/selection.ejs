@@ -1,69 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JS Method 월드컵</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
-      * {
-        font-family: "Gowun Dodum", sans-serif;
-      }
-      button {
-        font-family: "Gowun Dodum", sans-serif;
-        margin: 15px;
-      }
-      html {
-        background-color: #ffe882;
-      }
-      .content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 50px;
-      }
-    </style>
-    <!-- <link rel="stylesheet" href="default.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>JS Method 월드컵</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+		/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
+			* {
+				font-family: "Gowun Dodum", sans-serif;
+			}
+			button {
+				font-family: "Gowun Dodum", sans-serif;
+				margin: 15px;
+			}
+			html {
+				background-color: #ffe882;
+			}
+			.content {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin: 50px;
+			}
+		</style>
+		<!-- <link rel="stylesheet" href="default.css"> -->
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	</head>
 
-  <body>
-    <div class="content">
-      <div class="title">
-        <h3>&#128681;JavaScript 메서드 월드컵&#128681;</h3>
-      </div>
-      <div class="subtitle">
-        <h5>둘 중 더 좋은 자바스크립트 메서드는?</h5>
-      </div>
+	<body>
+		<div class="content">
+			<div class="title">
+				<h3>&#128681;JavaScript 메서드 월드컵&#128681;</h3>
+			</div>
+			<div class="subtitle">
+				<h5>둘 중 더 좋은 자바스크립트 메서드는?</h5>
+			</div>
+			<div class="selection"></div>
 
-      <div class="start_btn">
-        <button class="button is-primary is-light is-medium">다음</button>
-      </div>
-      <div class="ranking_dtn">
-        <button class="button is-link is-light">홈으로 돌아가기</button>
-      </div>
-    </div>
-  </body>
+			<div class="start_btn">
+				<button class="button is-primary is-light is-medium">
+					다음
+				</button>
+			</div>
+			<div class="ranking_dtn">
+				<button class="button is-link is-light">홈으로 돌아가기</button>
+			</div>
+		</div>
+	</body>
 </html>
 <script>
-  function shuffle(array) {
-    array.sort(() => Math.random() - 0.5);
-  }
+	function shuffle(array) {
+		array.sort(() => Math.random() - 0.5);
+	}
 
-  axios
-    .get("/funcs")
-    .then((result) => {
-      items = result.data;
-      shuffle(items);
-      console.log(items);
-    })
-    .catch((err) => {
-      throw err;
-    });
+	$(document).ready(() => {
+		setSelection();
+	});
+	let loadJson = async () => {
+		let methods = [];
+		return axios
+			.get("/funcs")
+			.then((res) => {
+				res.data.forEach((e) => {
+					let id = e.id;
+					let name = e.name;
+					let score = e.score;
+					let content = e.content;
+					let method = {
+						id: e.id,
+						name: e.name,
+						score: e.score,
+						content: e.content,
+					};
+					methods.push(method);
+				});
+				return methods;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+
+	let setSelection = async () => {
+		let methods = await loadJson();
+		shuffle(methods);
+		let winner = [],
+			display = [];
+
+		while (!(winner.length === 0 && methods.length === 0)) {
+			while (methods.length !== 0) {
+				display.push(methods[0]);
+				display.push(methods[1]);
+				methods.shift();
+				methods.shift();
+			}
+			// display in html
+			let display_html = `<div class="box">
+									<article class="media">
+										<div class="media-content">
+											<div class="selection-box first" value=${display[0]}>
+												<p>
+													<strong style="font-size: 33px; margin-right: 7px;">${display[0].name}</strong>
+													<br />
+													${display[0].content}
+												</p>
+											</div>
+										</div>
+									</article>
+								</div>
+								<div class="box">
+									<article class="media">
+										<div class="media-content">
+											<div class="selection-box second" value=${display[1]}>
+												<p>
+													<strong style="font-size: 33px; margin-right: 7px;">${display[1].name}</strong>
+													<br />
+													${display[1].content}
+												</p>
+											</div>
+										</div>
+									</article>
+								</div>
+							`;
+
+			$(".selection").append(display_html);
+
+			HTMLElement.prototype.waitForClick = async () => {
+				return new Promise((resolve) => {
+					this.addEventListener("click", () => {
+						resolve();
+					});
+				});
+			};
+
+			// click function
+			$(".selection-box").on("click", async () => {
+				// await this.waitForClick();
+				let selected_method = this.value;
+				console.log(selected_method);
+				// push to winner[]
+				// 
+			});
+
+			let selectOne = async () => {
+				await button.waitForClick();
+			};
+
+			// then empty display
+			display = [];
+		}
+	};
 </script>
